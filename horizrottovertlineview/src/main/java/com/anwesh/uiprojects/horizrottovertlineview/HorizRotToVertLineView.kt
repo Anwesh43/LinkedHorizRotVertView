@@ -190,6 +190,27 @@ class HorizRotToVertLineView(ctx : Context) : View(ctx) {
         fun startUpdating(cb : () -> Unit) {
             curr.startUpdating(cb)
         }
+    }
 
+    data class Renderer(var view : HorizRotToVertLineView) {
+
+        private val animator : Animator = Animator(view)
+        private val hrtvl : HorizRotToVertLine = HorizRotToVertLine(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            hrtvl.draw(canvas, paint)
+            animator.animate {
+                hrtvl.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            hrtvl.startUpdating {
+                animator.start()
+            }
+        }
     }
 }
