@@ -20,6 +20,7 @@ val strokeFactor : Int = 90
 val sizeFactor : Float = 2.9f
 val foreColor : Int = Color.parseColor("#311B92")
 val backColor : Int = Color.parseColor("#BDBDBD")
+val delay : Long = 20
 
 fun Int.inverse() : Float = 1f / this
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
@@ -37,7 +38,7 @@ fun Canvas.drawHorizRotToVert(i : Int, size : Float, sc1 : Float, sc2 : Float, p
     val sc2i : Float = sc2.divideScale(i, lines)
     save()
     translate((size - size * sc2i) * sf, 0f)
-    rotate(90f * sf * sc1i)
+    rotate(90f * sc1i)
     drawLine(0f, 0f, -size * sf, 0f, paint)
     restore()
 }
@@ -81,7 +82,7 @@ class HorizRotToVertLineView(ctx : Context) : View(ctx) {
     data class State(var scale : Float = 0f, var dir : Float = 0f, var prevScale : Float = 0f) {
 
         fun update(cb : (Float) -> Unit) {
-            scale += scale.updateValue(dir, lines, 1)
+            scale += scale.updateValue(dir, lines, lines)
             if (Math.abs(scale - prevScale) > 1) {
                 scale = prevScale + dir
                 dir = 0f
@@ -102,8 +103,9 @@ class HorizRotToVertLineView(ctx : Context) : View(ctx) {
 
         fun animate(cb : () -> Unit) {
             if (animated) {
+                cb()
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(delay)
                     view.invalidate()
                 } catch(ex : Exception) {
 
