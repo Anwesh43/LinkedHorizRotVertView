@@ -214,4 +214,13 @@ class HorizRotToVertLineView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity: Activity) : HorizRotToVertLineView {
+            val view : HorizRotToVertLineView = HorizRotToVertLineView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
